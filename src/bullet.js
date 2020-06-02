@@ -6,6 +6,7 @@ class Bullet extends React.Component {
         super(props);
         this.state = {editMode: false};
         this.toggleEditable = this.toggleEditable.bind(this);
+        this.onKeyDown = this.onKeyDown.bind(this);
     }
 
     toggleEditable(e) {
@@ -22,6 +23,9 @@ class Bullet extends React.Component {
         switch (e.key) {
             case 'Tab':
                 e.preventDefault();
+                let id = document.getElementById("activeBullet").dataset.id
+                e.shiftKey?this.props.data.dedent(id):this.props.data.indent(id)
+                // this.forceUpdate()
                 break;
             case 'Enter':
                 // create new bullet
@@ -39,6 +43,8 @@ class Bullet extends React.Component {
             case 'Shift':
                 // is unshifted
                 break;
+            default:
+                break;
         }
     }
 
@@ -49,7 +55,8 @@ class Bullet extends React.Component {
                 <li><input
                     id="activeBullet"
                     type="text"
-                    defaultValue={this.props.value}
+                    data-id={this.props.item.id}
+                    defaultValue={this.props.item.value}
                     onBlur={this.toggleEditable}
                     onKeyDown={this.onKeyDown}
                     onKeyUp={this.onKeyUp}
@@ -58,7 +65,7 @@ class Bullet extends React.Component {
             )
         } else {
             return (
-                <li onClick={this.toggleEditable}>{this.props.value}</li>
+                <li onClick={this.toggleEditable}>{this.props.item.value}</li>
             );
         }
     }
